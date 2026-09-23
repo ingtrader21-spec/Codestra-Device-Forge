@@ -25,7 +25,7 @@ class JobRequest(BaseModel):
 def dashboard(): return FileResponse(BASE/"static"/"index.html")
 
 @app.get("/health")
-def health(): return {"status":"ok","service":"codestra-device-forge","host":os.uname().nodename if hasattr(os,"uname") else "device-forge","version":"0.2.0"}
+def health(): return {"status":"ok","service":"codestra-device-forge","host":os.environ.get("COMPUTERNAME") or (os.uname().nodename if hasattr(os,"uname") else "device-forge"),"version":"0.2.0"}
 
 @app.get("/api/v1/integrations")
 def get_integrations(): return integrations()

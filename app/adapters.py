@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 import shutil, subprocess
 from .models import Integration
 
@@ -29,5 +29,12 @@ def discover_android():
 
 def discover_apple():
     r=run_readonly("idevice_id",["-l"])
-    if not r["available"]: return []
-    return [{"id":f"apple-{x[-6:]}","platform":"ios","serial_masked":"***"+x[-4:],"connection_mode":"usbmux"} for x in r["output"].splitlines() if x.strip()]
+    if not r["available"] or r.get("returncode") != 0: return []
+    rows=[]
+    for raw in r["output"].splitlines():
+        x=raw.strip()
+        if not x or "error" in x.lower() or "unable" in x.lower() or "device list" in x.lower(): continue
+        if len(x) < 16 or any(c.isspace() for c in x): continue
+        rows.append({"id":f"apple-{x[-6:]}","platform":"ios","serial_masked":"***"+x[-4:],"connection_mode":"usbmux"})
+    return rows
+

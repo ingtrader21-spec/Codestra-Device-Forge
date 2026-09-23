@@ -1,11 +1,19 @@
+﻿from pathlib import Path
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from .adapters import integrations, discover_android, discover_apple
 from .models import LabTarget
+
 app=FastAPI(title="Codestra Device Forge",version="0.1.0")
 audit=[]; lab={}
+BASE=Path(__file__).resolve().parent
+
+@app.get("/")
+def dashboard():
+    return FileResponse(BASE/"static"/"index.html")
 
 @app.get("/health")
-def health(): return {"status":"ok","service":"codestra-device-forge"}
+def health(): return {"status":"ok","service":"codestra-device-forge","host":"appolon"}
 
 @app.get("/api/v1/integrations")
 def get_integrations(): return integrations()

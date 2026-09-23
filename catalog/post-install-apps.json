@@ -1,0 +1,14 @@
+{
+  "mode":"opt-in-profile",
+  "rule":"Never silently install apps. Show compatible selections after OS install and require operator/user approval.",
+  "apps":[
+    {"id":"signal","name":"Signal","category":"messaging","official":"https://signal.org/download/","android_direct":"https://signal.org/android/apk/"},
+    {"id":"simplex","name":"SimpleX Chat","category":"messaging","official":"https://simplex.chat/downloads/"},
+    {"id":"mastodon","name":"Mastodon client","category":"social","source":"platform-approved-store-or-user-selected-client"},
+    {"id":"bluesky","name":"Bluesky","category":"social","source":"platform-approved-store"},
+    {"id":"matrix","name":"Matrix client","category":"social-messaging","source":"user-selected-compatible-client"},
+    {"id":"discord","name":"Discord","category":"social","source":"platform-approved-store"},
+    {"id":"telegram","name":"Telegram","category":"messaging","source":"platform-approved-store"},
+    {"id":"whatsapp","name":"WhatsApp","category":"messaging","source":"platform-approved-store"}
+  ]
+}

@@ -12,3 +12,23 @@ def test_real_lab_target_rejected():
 def test_synthetic_lab():
     assert c.post("/api/v1/lab/targets",json={"id":"lab1","kind":"financing"}).status_code==200
     assert c.post("/api/v1/lab/experiments/lab1").status_code==200
+
+def test_providers_endpoint():
+    r=c.get("/api/v1/providers")
+    assert r.status_code==200
+    assert isinstance(r.json(), list)
+
+def test_jobs_are_durable_and_approval_gated():
+    r=c.post("/api/v1/jobs",json={"kind":"diagnostic","requires_approval":True})
+    assert r.status_code==200
+    j=r.json()
+    assert j["state"]=="AWAITING_APPROVAL"
+    a=c.post(f"/api/v1/jobs/{j['id']}/approve")
+    assert a.status_code==200
+    assert a.json()["state"]=="READY"
+
+def test_registry_endpoint():
+    assert c.get("/api/v1/devices/registry").status_code==200
+
+def test_unknown_provider_404():
+    assert c.get("/api/v1/providers/not-real/health").status_code==404

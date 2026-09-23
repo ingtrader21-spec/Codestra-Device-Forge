@@ -1,25 +1,78 @@
-﻿from pathlib import Path
+from pathlib import Path
+import json, os
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 from .adapters import integrations, discover_android, discover_apple
 from .models import LabTarget
+from .storage import init_db, upsert_device, get_device, list_devices, create_job, get_job, list_jobs, set_job_state, list_audit, audit
+from .providers import provider_health, device_actions
 
-app=FastAPI(title="Codestra Device Forge",version="0.1.0")
-audit=[]; lab={}
+app=FastAPI(title="Codestra Device Forge",version="0.2.0")
 BASE=Path(__file__).resolve().parent
+init_db()
+lab={}
 
-@app.get("/")
+class JobRequest(BaseModel):
+    kind: str
+    device_id: str|None=None
+    payload: dict={}
+    requires_approval: bool=True
+
+@app.get("/", include_in_schema=False)
 def dashboard():
     return FileResponse(BASE/"static"/"index.html")
 
 @app.get("/health")
-def health(): return {"status":"ok","service":"codestra-device-forge","host":"appolon"}
+def health():
+    return {"status":"ok","service":"codestra-device-forge","host":os.environ.get("COMPUTERNAME","appolon").lower(),"version":"0.2.0"}
 
 @app.get("/api/v1/integrations")
-def get_integrations(): return integrations()
+def get_integrations():
+    return integrations()
+
+@app.get("/api/v1/providers")
+def get_providers():
+    return provider_health()
+
+@app.get("/api/v1/providers/{provider_id}/health")
+def get_provider_health(provider_id:str):
+    p=next((x for x in provider_health() if x["id"]==provider_id),None)
+    if not p: raise HTTPException(404,"provider not found")
+    return p
 
 @app.get("/api/v1/devices")
-def devices(): return discover_android()+discover_apple()
+def devices():
+    found=discover_android()+discover_apple()
+    for d in found: upsert_device(d)
+    return found
+
+@app.get("/api/v1/devices/registry")
+def device_registry():
+    return list_devices()
+
+@app.get("/api/v1/devices/{device_id}")
+def device_detail(device_id:str):
+    d=get_device(device_id)
+    if not d: raise HTTPException(404,"device not found in registry")
+    d["snapshot"]=json.loads(d["snapshot_json"])
+    return d
+
+@app.get("/api/v1/devices/{device_id}/actions")
+def actions(device_id:str):
+    d=get_device(device_id)
+    if not d:
+        live=next((x for x in devices() if x["id"]==device_id),None)
+        if not live: raise HTTPException(404,"device not found")
+        d=live
+    return {"device_id":device_id,"actions":device_actions(d)}
+
+@app.post("/api/v1/devices/{device_id}/probe")
+def probe(device_id:str):
+    live=next((x for x in devices() if x["id"]==device_id),None)
+    if not live: raise HTTPException(404,"device not currently connected")
+    audit("device.probed",device_id,live)
+    return {"device":live,"actions":device_actions(live)}
 
 @app.get("/api/v1/restrictions/{device_id}")
 def restrictions(device_id:str):
@@ -31,19 +84,51 @@ def esim(device_id:str):
 
 @app.get("/api/v1/management/{device_id}")
 def management(device_id:str):
-    return {"device_id":device_id,"provider":"adapter-required","status":"unknown"}
+    return {"device_id":device_id,"provider":"mdmesh","status":"adapter-readback-pending"}
+
+@app.post("/api/v1/jobs")
+def new_job(req:JobRequest):
+    if req.device_id and not get_device(req.device_id):
+        raise HTTPException(404,"device not found in registry")
+    return create_job(req.kind,req.device_id,req.payload,req.requires_approval)
+
+@app.get("/api/v1/jobs")
+def jobs():
+    return list_jobs()
+
+@app.get("/api/v1/jobs/{job_id}")
+def job(job_id:str):
+    j=get_job(job_id)
+    if not j: raise HTTPException(404,"job not found")
+    return j
+
+@app.post("/api/v1/jobs/{job_id}/approve")
+def approve_job(job_id:str):
+    j=get_job(job_id)
+    if not j: raise HTTPException(404,"job not found")
+    if j["state"]!="AWAITING_APPROVAL": raise HTTPException(409,f"job is {j['state']}")
+    return set_job_state(job_id,"READY",{"approval":"recorded"})
+
+@app.post("/api/v1/jobs/{job_id}/cancel")
+def cancel_job(job_id:str):
+    j=get_job(job_id)
+    if not j: raise HTTPException(404,"job not found")
+    if j["state"] in {"COMPLETE","CANCELLED"}: raise HTTPException(409,f"job is {j['state']}")
+    return set_job_state(job_id,"CANCELLED")
 
 @app.post("/api/v1/lab/targets")
 def create_target(target:LabTarget):
     if not target.synthetic: raise HTTPException(400,"Research targets must be synthetic")
-    lab[target.id]=target.model_dump(); audit.append({"event":"lab.target.created","target":target.id})
+    lab[target.id]=target.model_dump()
+    audit("lab.target.created",target.id,lab[target.id])
     return lab[target.id]
 
 @app.post("/api/v1/lab/experiments/{target_id}")
 def experiment(target_id:str):
     if target_id not in lab: raise HTTPException(404,"target not found")
-    audit.append({"event":"lab.experiment","target":target_id})
+    audit("lab.experiment",target_id,{"scope":"synthetic-only"})
     return {"target":target_id,"scope":"synthetic-only","result":"baseline-enforcement-active"}
 
 @app.get("/api/v1/audit")
-def get_audit(): return audit
+def get_audit():
+    return list_audit()

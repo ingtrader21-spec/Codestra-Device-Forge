@@ -1,12 +1,24 @@
 services:
   api:
-    image: python:3.12-slim
-    working_dir: /app
+    build: .
+    container_name: codestra-device-forge
+    restart: unless-stopped
+    privileged: true
     volumes:
-      - ./:/app
-    command: python -m http.server 8080
+      - /dev/bus/usb:/dev/bus/usb
+      - /run/usbmuxd:/run/usbmuxd
     ports:
-      - "127.0.0.1:8080:8080"
-
-# Third-party integrations are intentionally not exposed publicly.
-# Add MDMesh, MobSF, and lab services behind Device Forge adapters in follow-up commits.
+      - "127.0.0.1:8090:8090"
+    environment:
+      MDMESH_URL: http://mdmesh:8080
+      MOBSF_URL: http://mobsf:8000
+    networks: [forge]
+  mobsf:
+    image: opensecurity/mobile-security-framework-mobsf:latest
+    container_name: codestra-mobsf
+    restart: unless-stopped
+    expose: ["8000"]
+    networks: [forge]
+networks:
+  forge:
+    driver: bridge

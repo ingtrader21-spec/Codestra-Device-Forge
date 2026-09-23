@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Codestra Device Forge API",
-    "description": "Generated from live OpenAPI on Ubuntu Device Forge runtime. Research lab targets are synthetic-only.",
+    "name": "Codestra Device Forge API V2",
+    "description": "Generated from live Device Forge OpenAPI. Capability-driven UI, durable jobs, provider health, OpenEUICC eSIM provider. Synthetic restriction research only.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -25,6 +25,46 @@
       "response": []
     },
     {
+      "name": "App Catalog",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/catalog/apps",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "catalog",
+            "apps"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Os Catalog",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/catalog/os",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "catalog",
+            "os"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Devices",
       "request": {
         "method": "GET",
@@ -38,6 +78,131 @@
             "api",
             "v1",
             "devices"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Registry",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/devices/registry",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "devices",
+            "registry"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Detail",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/devices/test-device",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "devices",
+            "test-device"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Actions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/devices/test-device/actions",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "devices",
+            "test-device",
+            "actions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Probe",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/devices/test-device/probe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "devices",
+            "test-device",
+            "probe"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Openeuicc",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/esim/providers/openeuicc",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "esim",
+            "providers",
+            "openeuicc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Openeuicc Device",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/esim/providers/openeuicc/test-device",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "esim",
+            "providers",
+            "openeuicc",
+            "test-device"
           ]
         }
       },
@@ -77,6 +242,115 @@
             "api",
             "v1",
             "integrations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Jobs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Job",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"kind\": \"diagnostic\", \"requires_approval\": true}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Job",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs/test-job",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "test-job"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Approve",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs/test-job/approve",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "test-job",
+            "approve"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cancel",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs/test-job/cancel",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "test-job",
+            "cancel"
           ]
         }
       },
@@ -147,6 +421,46 @@
             "v1",
             "management",
             "test-device"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Providers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/providers",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "providers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Provider",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/providers/adb/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "providers",
+            "adb",
+            "health"
           ]
         }
       },

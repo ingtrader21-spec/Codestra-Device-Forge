@@ -1,0 +1,193 @@
+{
+  "info": {
+    "name": "Codestra Device Forge API",
+    "description": "Generated from live OpenAPI on Ubuntu Device Forge runtime. Research lab targets are synthetic-only.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Audit",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/audit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "audit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Devices",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/devices",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "devices"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Esim",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/esim/test-device",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "esim",
+            "test-device"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Integrations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/integrations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "integrations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Experiment",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/lab/experiments/postman-lab",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "lab",
+            "experiments",
+            "postman-lab"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Target",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/lab/targets",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "lab",
+            "targets"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"id\": \"postman-lab\", \"kind\": \"financing\", \"synthetic\": true}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Management",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/management/test-device",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "management",
+            "test-device"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Restrictions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/restrictions/test-device",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "restrictions",
+            "test-device"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

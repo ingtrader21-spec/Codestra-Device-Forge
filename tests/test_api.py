@@ -12,3 +12,6 @@ def test_real_lab_target_rejected():
 def test_synthetic_lab():
     assert c.post("/api/v1/lab/targets",json={"id":"lab1","kind":"financing"}).status_code==200
     assert c.post("/api/v1/lab/experiments/lab1").status_code==200
+def test_dashboard(): assert c.get("/").status_code==200
+def test_os_catalog(): assert c.get("/api/v1/catalog/os").status_code==200
+def test_app_catalog(): assert c.get("/api/v1/catalog/apps").status_code==200

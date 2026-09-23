@@ -6,7 +6,6 @@ services:
     privileged: true
     volumes:
       - /dev/bus/usb:/dev/bus/usb
-      - /run/usbmuxd:/run/usbmuxd
     ports:
       - "127.0.0.1:8090:8090"
     environment:

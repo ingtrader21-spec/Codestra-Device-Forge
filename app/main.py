@@ -1,4 +1,8 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import json
+from pathlib import Path
 from .adapters import integrations, discover_android, discover_apple
 from .models import LabTarget
 app=FastAPI(title="Codestra Device Forge",version="0.1.0")
@@ -39,3 +43,19 @@ def experiment(target_id:str):
 
 @app.get("/api/v1/audit")
 def get_audit(): return audit
+
+CATALOG = Path(__file__).resolve().parent.parent / "catalog"
+
+@app.get("/api/v1/catalog/os")
+def os_catalog():
+    return json.loads((CATALOG / "os-catalog.json").read_text())
+
+@app.get("/api/v1/catalog/apps")
+def app_catalog():
+    return json.loads((CATALOG / "post-install-apps.json").read_text())
+
+@app.get("/", include_in_schema=False)
+def dashboard():
+    return FileResponse(Path(__file__).resolve().parent / "static" / "index.html")
+
+app.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent / "static"), name="static")

@@ -15,3 +15,31 @@ def test_synthetic_lab():
 def test_dashboard(): assert c.get("/").status_code==200
 def test_os_catalog(): assert c.get("/api/v1/catalog/os").status_code==200
 def test_app_catalog(): assert c.get("/api/v1/catalog/apps").status_code==200
+
+def test_devices_never_promotes_apple_error_text(monkeypatch):
+    import app.adapters as a
+    monkeypatch.setattr(a, "run_readonly", lambda tool,args,timeout=8: {"available": True, "returncode": 1, "output": "ERROR: Unable to retrieve device list!"})
+    assert a.discover_apple() == []
+
+def test_provider_health_endpoint():
+    r=c.get("/api/v1/providers")
+    assert r.status_code==200
+    ids={x["id"] for x in r.json()}
+    assert "openeuicc" in ids
+
+def test_openeuicc_status_endpoint():
+    r=c.get("/api/v1/esim/providers/openeuicc")
+    assert r.status_code==200
+    assert r.json()["provider"]=="openeuicc"
+
+def test_jobs_are_approval_gated():
+    r=c.post("/api/v1/jobs",json={"kind":"diagnostic","requires_approval":True})
+    assert r.status_code==200
+    j=r.json()
+    assert j["state"]=="AWAITING_APPROVAL"
+    a=c.post(f"/api/v1/jobs/{j['id']}/approve")
+    assert a.status_code==200
+    assert a.json()["state"]=="READY"
+
+def test_registry_endpoint():
+    assert c.get("/api/v1/devices/registry").status_code==200

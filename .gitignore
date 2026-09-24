@@ -9,3 +9,6 @@ build/
 coverage/
 *.log
 .DS_Store
+
+*.egg-info/
+data/

@@ -1,0 +1,12 @@
+{
+  "policy":"compatibility-first",
+  "options":[
+    {"id":"stock","name":"OEM / Stock OS","support":"device-specific"},
+    {"id":"grapheneos","name":"GrapheneOS","official":"https://grapheneos.org/","compatibility":"official-supported-devices-only"},
+    {"id":"lineageos","name":"LineageOS","official":"https://lineageos.org/","compatibility":"official-device-list"},
+    {"id":"eos","name":"/e/OS","official":"https://e.foundation/","compatibility":"official-or-community-labelled"},
+    {"id":"ubuntutouch","name":"Ubuntu Touch","official":"https://ubports.com/","compatibility":"official-device-list"},
+    {"id":"postmarketos","name":"postmarketOS","official":"https://postmarketos.org/","compatibility":"device-category-aware"},
+    {"id":"aosp","name":"Android Open Source Project","official":"https://source.android.com/","compatibility":"build-target-required"}
+  ]
+}
